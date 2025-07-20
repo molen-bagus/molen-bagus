@@ -1,0 +1,113 @@
+name: Deploy to CPanel
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      deployment_type:
+        description: 'Deployment type'
+        required: true
+        default: 'incremental'
+        type: choice
+        options:
+        - incremental
+        - full
+        - force_all_php
+      force_upload:
+        description: 'Force upload all PHP files (if auto-detection fails)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+        - 'false'
+        - 'true'
+jobs:
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2  # Get last 2 commits for diff
+    # Skip build steps - just sync files directly
+
+    - name: Determine deployment mode
+      id: deploy_mode
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          DEPLOY_TYPE="${{ github.event.inputs.deployment_type }}"
+        else
+          DEPLOY_TYPE="incremental"
+        fi
+
+        echo "deployment_type=$DEPLOY_TYPE" >> $GITHUB_OUTPUT
+        echo "🚀 Deployment mode: $DEPLOY_TYPE"
+
+    - name: Smart Server Sync
+      id: sync_deploy
+      if: steps.deploy_mode.outputs.deployment_type == 'incremental'
+      uses: nick-fields/retry@v2
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        retry_wait_seconds: 20
+        command: |
+          # Install lftp
+          sudo apt-get update && sudo apt-get install -y lftp
+
+          echo "🔍 Laravel Core Sync - Only sync important Laravel folders..."
+          echo "📋 Will sync: app/, bootstrap/, config/, public/, resources/, routes/"
+          echo "⚡ Excluding: vendor/, .htaccess, index.php (server files)"
+          echo "✅ Safe deployment - only application code"
+
+          # Use selective folder sync instead of full mirror
+          lftp -e "
+          set ftp:ssl-allow no;
+          set ftp:passive-mode on;
+          set net:timeout 60;
+          set net:max-retries 3;
+          set net:reconnect-interval-base 5;
+          open ftp://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@${{ secrets.SERVER }};
+          cd /public_html/;
+          lcd ./;
+
+          echo 'Starting selective Laravel folder sync...';
+
+          # Sync only important Laravel folders
+          mirror --reverse --only-newer --verbose --parallel=2 app/ app/;
+          mirror --reverse --only-newer --verbose --parallel=2 bootstrap/ bootstrap/;
+          mirror --reverse --only-newer --verbose --parallel=2 config/ config/;
+          mirror --reverse --only-newer --verbose --parallel=2 resources/ resources/;
+          mirror --reverse --only-newer --verbose --parallel=2 routes/ routes/;
+
+          # Sync bootstrap/cache with delete to clear cache files
+          echo 'Syncing bootstrap/cache with delete to clear old cache...';
+          mirror --reverse --delete --verbose --parallel=1 bootstrap/cache/ bootstrap/cache/;
+
+          echo "✅ Laravel cleared old cache files completed!";
+
+          # Sync public folder but exclude index.php and .htaccess
+          mirror --reverse --only-newer --verbose --parallel=2 --exclude='index.php' --exclude='.htaccess' public/ public/;
+
+          quit
+          "
+
+          echo "✅ Laravel core sync completed!"
+          echo "🧹 Bootstrap cache cleared - server cache matches local cache"
+
+    - name: Deployment Summary
+      if: always()
+      run: |
+        if [ "${{ steps.deploy_mode.outputs.deployment_type }}" = "full" ]; then
+          echo "✅ Full deployment completed!"
+          echo "🔄 Future pushes will only deploy changed files."
+        elif [ "${{ steps.changes.outputs.has_changes }}" = "true" ]; then
+          echo "✅ Selective deployment completed!"
+          echo "� Uploaded: $(echo '${{ steps.changes.outputs.changed_files }}' | wc -l) files"
+          echo "🗑️ Deleted: $(echo '${{ steps.changes.outputs.deleted_files }}' | wc -l) files"
+          echo "⚡ Only changed files were processed - no unnecessary transfers!"
+        else
+          echo "ℹ️ No deployment needed - no relevant files changed."
+        fi
+        echo "🎯 Server synchronized with Git repository."
