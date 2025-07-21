@@ -14,6 +14,7 @@
                 <h1 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 font-poppins leading-tight">
                     Jajanan <span class="text-primary-600">Tradisional</span><br>
                     <span class="text-primary-700">Terbaik</span> di Bandung
+                    <!-- TEST DEPLOYMENT: <?php echo date('Y-m-d H:i:s'); ?> -->
                 </h1>
                 <p class="text-lg lg:text-xl text-gray-700 mb-8 leading-relaxed">
                     Nikmati kelezatan molen, onde-onde, pastel, dan kue soes yang dibuat dengan resep turun temurun. 
