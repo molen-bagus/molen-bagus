@@ -12,7 +12,7 @@
             <!-- Hero Content -->
             <div class="text-center lg:text-left">
                 <h1 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 font-poppins leading-tight">
-                    Jajanan <span class="text-primary-600">Tradisional</span><br>
+                    test <span class="text-primary-600">Tradisional</span><br>
                     <span class="text-primary-700">Terbaik</span> di Bandung
                 </h1>
                 <p class="text-lg lg:text-xl text-gray-700 mb-8 leading-relaxed">
