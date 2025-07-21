@@ -24,7 +24,7 @@
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                     <a href="#products" class="bg-primary-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
                         <i class="fas fa-shopping-bag mr-2"></i>
-                        Lihat dulu
+                        Lihat Produk
                     </a>
                     <a href="https://wa.me/6281322818164?text=Halo%20Molen%20Bagus" target="_blank" class="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-50 transition-all duration-300 border-2 border-primary-600">
                         <i class="fab fa-whatsapp mr-2"></i>
