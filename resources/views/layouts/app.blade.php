@@ -109,6 +109,10 @@
                                     <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-200">
                                         {{ Auth::user()->email }}
                                     </div>
+                                    <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                        <i class="fas fa-cog mr-2"></i>
+                                        Admin Panel
+                                    </a>
                                     <form method="POST" action="{{ route('logout') }}" class="block">
                                         @csrf
                                         <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
@@ -161,6 +165,10 @@
                                 <span class="font-medium">{{ Auth::user()->name }}</span>
                             </div>
                             <div class="text-sm text-gray-500 mb-3">{{ Auth::user()->email }}</div>
+                            <a href="{{ route('admin.products.index') }}" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors mb-3">
+                                <i class="fas fa-cog mr-2"></i>
+                                Admin Panel
+                            </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full text-left text-gray-700 hover:text-primary-600 font-medium transition-colors">
