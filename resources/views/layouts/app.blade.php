@@ -93,6 +93,42 @@
                     <a href="#products" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Produk</a>
                     <a href="#reviews" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Ulasan</a>
                     <a href="#contact" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Kontak</a>
+
+                    @auth
+                        <!-- User Menu -->
+                        <div class="relative group">
+                            <button class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                                <i class="fas fa-user-circle text-xl"></i>
+                                <span>{{ Auth::user()->name }}</span>
+                                <i class="fas fa-chevron-down text-sm"></i>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-2">
+                                    <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-200">
+                                        {{ Auth::user()->email }}
+                                    </div>
+                                    <form method="POST" action="{{ route('logout') }}" class="block">
+                                        @csrf
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-sign-out-alt mr-2"></i>
+                                            Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                            <i class="fas fa-sign-in-alt mr-1"></i>
+                            Login
+                        </a>
+                        <a href="{{ route('register') }}" class="bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-user-plus mr-1"></i>
+                            Daftar
+                        </a>
+                    @endauth
                 </nav>
                 
                 <!-- Cart & Mobile Menu -->
@@ -117,10 +153,57 @@
                     <a href="#products" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Produk</a>
                     <a href="#reviews" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Ulasan</a>
                     <a href="#contact" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Kontak</a>
+
+                    @auth
+                        <div class="border-t border-gray-200 pt-3 mt-3">
+                            <div class="flex items-center space-x-2 text-gray-700 mb-3">
+                                <i class="fas fa-user-circle text-xl"></i>
+                                <span class="font-medium">{{ Auth::user()->name }}</span>
+                            </div>
+                            <div class="text-sm text-gray-500 mb-3">{{ Auth::user()->email }}</div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <div class="border-t border-gray-200 pt-3 mt-3 space-y-3">
+                            <a href="{{ route('login') }}" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                                <i class="fas fa-sign-in-alt mr-2"></i>
+                                Login
+                            </a>
+                            <a href="{{ route('register') }}" class="block bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors text-center">
+                                <i class="fas fa-user-plus mr-2"></i>
+                                Daftar
+                            </a>
+                        </div>
+                    @endauth
                 </nav>
             </div>
         </div>
     </header>
+
+    <!-- Flash Messages -->
+    @if(session('success'))
+        <div id="flashMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                {{ session('success') }}
+            </div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div id="flashMessage" class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                {{ session('error') }}
+            </div>
+        </div>
+    @endif
 
     <!-- Main Content -->
     <main>
@@ -435,6 +518,21 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateCartCount();
+
+            // Show flash messages
+            const flashMessage = document.getElementById('flashMessage');
+            if (flashMessage) {
+                setTimeout(() => {
+                    flashMessage.classList.remove('translate-x-full');
+                }, 100);
+
+                setTimeout(() => {
+                    flashMessage.classList.add('translate-x-full');
+                    setTimeout(() => {
+                        flashMessage.remove();
+                    }, 300);
+                }, 4000);
+            }
         });
     </script>
 </body>
