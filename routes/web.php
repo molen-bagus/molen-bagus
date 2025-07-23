@@ -19,8 +19,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Admin routes
-    Route::prefix('admin')->name('admin.')->group(function () {
+    // Admin routes - protected by admin middleware
+    Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         Route::resource('products', AdminProductController::class);
     });
 });
