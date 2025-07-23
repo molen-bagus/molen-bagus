@@ -47,9 +47,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+//nyobain aja ntar hps lagi
     /**
-     * Check if user is admin
+     * Check if user is admin 
      *
      * @return bool
      */
