@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Molen Bagus - Jajanan Tradisional Terbaik di Bandung')
+@section('title', 'Molen Bagus - Jajanan Tradisional di Bandung')
 @section('description', 'Nikmati kelezatan molen, onde-onde, pastel, dan kue soes terbaik di Bandung. Dibuat dengan resep turun temurun dan bahan berkualitas.')
 
 @section('content')
