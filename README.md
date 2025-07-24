@@ -7,19 +7,71 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Molen Bagus - Website Toko Molen
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Website toko molen yang dibangun dengan Laravel 12, menampilkan produk-produk molen dengan fitur admin panel untuk manajemen produk.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🏠 Website Publik
+- Halaman home dengan showcase produk molen
+- Responsive design dengan Tailwind CSS
+- Galeri produk dengan gambar dan deskripsi
+
+### 🔐 Sistem Autentikasi
+- Login dan registrasi user
+- Session management
+- Password hashing dengan bcrypt
+- CSRF protection
+
+### 👨‍💼 Role-Based Access Control
+- **Admin**: Akses penuh ke admin panel
+- **User**: Hanya akses ke fitur publik
+- Middleware protection untuk routes admin
+- Conditional UI berdasarkan role
+
+### ⚙️ Admin Panel (Khusus Admin)
+- CRUD produk (Create, Read, Update, Delete)
+- Upload dan manajemen gambar produk
+- Status produk (aktif/tidak aktif)
+- Responsive admin interface
+
+## Dokumentasi
+
+- [📖 Sistem Autentikasi](README_AUTH.md)
+- [🛠️ Admin CRUD](README_ADMIN_CRUD.md)
+- [🔒 Role-Based Access Control](README_ROLE_BASED_ACCESS.md)
+
+## Akun Testing
+
+### Admin Account
+- **Email**: `admin@molenbagus.com`
+- **Password**: `admin123`
+- **Akses**: Admin panel + fitur publik
+
+### User Account
+- **Email**: `test@example.com`
+- **Password**: `password`
+- **Akses**: Hanya fitur publik
+
+## Quick Start
+
+1. Clone repository
+2. Install dependencies: `composer install`
+3. Copy environment: `cp .env.example .env`
+4. Generate key: `php artisan key:generate`
+5. Run migrations: `php artisan migrate`
+6. Seed database: `php artisan db:seed`
+7. Create storage link: `php artisan storage:link`
+8. Start server: `php artisan serve`
+
+## Teknologi
+
+- **Backend**: Laravel 12
+- **Frontend**: Tailwind CSS, Font Awesome
+- **Database**: SQLite
+- **Authentication**: Laravel Auth
+- **File Storage**: Laravel Storage
 
 ## Learning Laravel
 

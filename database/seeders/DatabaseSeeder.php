@@ -17,11 +17,24 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
         ]);
 
-        // User::factory(10)->create();
+        // Create or update admin user
+        User::updateOrCreate(
+            ['email' => 'admin@molenbagus.com'],
+            [
+                'name' => 'Admin',
+                'password' => bcrypt('admin123'),
+                'role' => 'admin',
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Create or update regular user
+        User::updateOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'),
+                'role' => 'user',
+            ]
+        );
     }
 }
