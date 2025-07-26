@@ -27,6 +27,9 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1YZyXehd3cLE9aGAvJ09uAOWSY3YBaEB9b1Fg4CTH+ec8IQkhOewCeJ4r5g+a3a0Y+mz/cTymYbL8B0IuWmE1g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
