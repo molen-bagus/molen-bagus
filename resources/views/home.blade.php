@@ -66,6 +66,13 @@
     <div class="absolute bottom-20 right-10 w-12 h-12 bg-secondary-300 rounded-full opacity-20 animate-pulse"></div>
 </section>
 
+@if(Auth::check())
+    <p class="text-green-600">User sedang login sebagai: {{ Auth::user()->name }}</p>
+@else
+    <p class="text-red-600">User belum login.</p>
+@endif
+
+
 <!-- Order Methods Section -->
 <section class="py-16 bg-white">
     <div class="container mx-auto px-4 lg:px-8">
@@ -211,6 +218,31 @@
     </div>
 </section>
 
+<!-- tambah ulasan -->
+<div class="max-w-2xl mx-auto mb-12">
+    @auth
+        @if (session('success'))
+            <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <form action="{{ route('review.store') }}" method="POST" class="space-y-4">
+            @csrf
+            <textarea name="content" rows="3" class="w-full p-3 border rounded" placeholder="Tulis ulasan Anda...">{{ old('content') }}</textarea>
+            @error('content')
+                <p class="text-red-500 text-sm">{{ $message }}</p>
+            @enderror
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Kirim Ulasan</button>
+        </form>
+    @else
+        <p class="text-center text-gray-500">
+            <a href="/login" class="text-blue-600 underline">Login</a> terlebih dahulu untuk menulis ulasan.
+        </p>
+    @endauth
+</div>
+
+
 <!-- Reviews Section -->
 <section id="reviews" class="py-16 bg-gray-50">
     <div class="container mx-auto px-4 lg:px-8">
@@ -220,57 +252,27 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Review cards will be loaded here -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <div class="flex items-center mb-4">
-                    <img src="{{ asset('pelanggan/D.png') }}" alt="Dian Permatasari" class="w-12 h-12 rounded-full mr-4">
-                    <div>
-                        <h4 class="font-semibold text-gray-900">Dian Permatasari</h4>
-                        <div class="text-yellow-500">★★★★☆</div>
+            @forelse ($reviews as $review)
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center mb-4">
+                        {{-- Gambar avatar default --}}
+                        <img src="{{ asset('pelanggan/default.png') }}" alt="{{ $review->user->name }}" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">{{ $review->user->name }}</h4>
+                            <div class="text-yellow-500">★★★★☆</div> {{-- dummy rating --}}
+                        </div>
                     </div>
+                    <p class="text-gray-600 text-sm">"{{ $review->content }}"</p>
+                    <p class="text-xs text-gray-400 mt-2">{{ $review->created_at->diffForHumans() }}</p>
                 </div>
-                <p class="text-gray-600 text-sm">"Enak molen pisangnya. Kalau bisa harganya balik ke awal."</p>
-                <p class="text-xs text-gray-400 mt-2">2 tahun yang lalu</p>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <div class="flex items-center mb-4">
-                    <img src="{{ asset('pelanggan/N.png') }}" alt="Neneng Rahayu" class="w-12 h-12 rounded-full mr-4">
-                    <div>
-                        <h4 class="font-semibold text-gray-900">Neneng Rahayu</h4>
-                        <div class="text-yellow-500">★★★★☆</div>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm">"Baru nyoba sekali .. enak onde nya renyah"</p>
-                <p class="text-xs text-gray-400 mt-2">3 tahun yang lalu</p>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <div class="flex items-center mb-4">
-                    <img src="{{ asset('pelanggan/R.png') }}" alt="Regina Kumakauw" class="w-12 h-12 rounded-full mr-4">
-                    <div>
-                        <h4 class="font-semibold text-gray-900">Regina Kumakauw</h4>
-                        <div class="text-yellow-500">★★★★★</div>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm">"INI ENAKKKKK murah lagi, aa molen plss buka di antapani"</p>
-                <p class="text-xs text-gray-400 mt-2">1 bulan yang lalu</p>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <div class="flex items-center mb-4">
-                    <img src="{{ asset('pelanggan/RA.png') }}" alt="Rahila Adhien" class="w-12 h-12 rounded-full mr-4">
-                    <div>
-                        <h4 class="font-semibold text-gray-900">Rahila Adhien</h4>
-                        <div class="text-yellow-500">★★★★★</div>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm">"Pelayanan ramah, rasa mantap!"</p>
-                <p class="text-xs text-gray-400 mt-2">4 tahun yang lalu</p>
-            </div>
+            @empty
+                <p class="text-center text-gray-500 col-span-4">Belum ada ulasan dari pelanggan.</p>
+            @endforelse
         </div>
     </div>
 </section>
+
+
 
 <!-- Contact Section -->
 <section id="contact" class="py-16 bg-primary-600 text-white">
@@ -341,7 +343,7 @@
             </div>
         </div>
     </div>
-</section>
+    </section>
 @endsection
 
 @push('styles')
