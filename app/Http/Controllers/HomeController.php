@@ -7,12 +7,15 @@ use App\Models\Product;
 use App\Models\Review;
 
 class HomeController extends Controller
+
 {
     public function index()
     {
-        $products = Product::where('is_active', true)->get();
-        $reviews = Review::latest()->take(4)->get(); // ambil 4 review terbaru
+    $products = Product::active()->get();   // ambil semua produk
+    $reviews = Review::with('user')->latest()->get(); // ambil semua review + user-nya
 
-        return view('home', compact('products', 'reviews'));
-    }
+    return view('home', compact('products', 'reviews'));
+    
+}
+
 }

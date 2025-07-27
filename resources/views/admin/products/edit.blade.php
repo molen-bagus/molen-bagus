@@ -74,21 +74,14 @@
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                             Kategori <span class="text-red-500">*</span>
                         </label>
-                        <select name="category" 
-                                id="category"
-                                required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('category') border-red-500 @enderror">
-                            <option value="">Pilih Kategori</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category }}" {{ old('category', $product->category) == $category ? 'selected' : '' }}>
-                                    {{ ucfirst($category) }}
-                                </option>
-                            @endforeach
-                            <option value="molen" {{ old('category', $product->category) == 'molen' ? 'selected' : '' }}>Molen</option>
-                            <option value="soes" {{ old('category', $product->category) == 'soes' ? 'selected' : '' }}>Soes</option>
-                            <option value="onde-onde" {{ old('category', $product->category) == 'onde-onde' ? 'selected' : '' }}>Onde-onde</option>
-                            <option value="pastel" {{ old('category', $product->category) == 'pastel' ? 'selected' : '' }}>Pastel</option>
-                        </select>
+                        <select name="category" id="category" required class="...">
+                <option value="">Pilih Kategori</option>
+                 @foreach($categories as $category)
+                    <option value="{{ $category }}" {{ old('category') == $category ? 'selected' : '' }}>
+                     {{ ucfirst($category) }}
+                    </option>
+                 @endforeach
+                </select>
                         @error('category')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

@@ -66,13 +66,6 @@
     <div class="absolute bottom-20 right-10 w-12 h-12 bg-secondary-300 rounded-full opacity-20 animate-pulse"></div>
 </section>
 
-@if(Auth::check())
-    <p class="text-green-600">User sedang login sebagai: {{ Auth::user()->name }}</p>
-@else
-    <p class="text-red-600">User belum login.</p>
-@endif
-
-
 <!-- Order Methods Section -->
 <section class="py-16 bg-white">
     <div class="container mx-auto px-4 lg:px-8">
@@ -214,63 +207,86 @@
                 </div>
             </div>
             @endforeach
+            <p id="noProductsMessage" class="text-center text-gray-500 col-span-full hidden">Tidak ada produk ditemukan.</p>
+
         </div>
     </div>
 </section>
 
-<!-- tambah ulasan -->
-<div class="max-w-2xl mx-auto mb-12">
-    @auth
-        @if (session('success'))
-            <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <form action="{{ route('review.store') }}" method="POST" class="space-y-4">
-            @csrf
-            <textarea name="content" rows="3" class="w-full p-3 border rounded" placeholder="Tulis ulasan Anda...">{{ old('content') }}</textarea>
-            @error('content')
-                <p class="text-red-500 text-sm">{{ $message }}</p>
-            @enderror
-            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Kirim Ulasan</button>
-        </form>
-    @else
-        <p class="text-center text-gray-500">
-            <a href="/login" class="text-blue-600 underline">Login</a> terlebih dahulu untuk menulis ulasan.
-        </p>
-    @endauth
-</div>
-
-
-<!-- Reviews Section -->
+<!-- Ulasan Pelanggan -->
 <section id="reviews" class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4 lg:px-8">
+    <div class="container mx-auto px-4 lg:px-8 max-w-5xl">
+        <!-- Judul -->
         <div class="text-center mb-12">
             <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 font-poppins">Ulasan Pelanggan</h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">Apa kata pelanggan tentang produk kami</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Form Tambah Ulasan -->
+        <div class="mb-12">
+            @auth
+                @if (session('success'))
+                    <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('review.store') }}" method="POST" class="space-y-4">
+                    @csrf
+
+    <!-- Rating Bintang -->
+    <div class="flex space-x-1 text-2xl text-yellow-400 cursor-pointer" id="ratingStars">
+        @for ($i = 1; $i <= 5; $i++)
+            <i class="fa fa-star text-gray-300" data-value="{{ $i }}"></i>
+        @endfor
+    </div>
+    <input type="hidden" name="rating" id="ratingInput" value="{{ old('rating', 0) }}">
+    @error('rating')
+        <p class="text-red-500 text-sm">{{ $message }}</p>
+    @enderror
+
+    <!-- Ulasan -->
+    <textarea name="content" rows="3" class="w-full p-3 border rounded" placeholder="Tulis ulasan Anda...">{{ old('content') }}</textarea>
+    @error('content')
+        <p class="text-red-500 text-sm">{{ $message }}</p>
+    @enderror
+
+    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+        Kirim Ulasan
+    </button>
+</form>
+            @else
+                <p class="text-center text-gray-500">
+                    <a href="/login" class="text-blue-600 underline">Login</a> terlebih dahulu untuk menulis ulasan.
+                </p>
+            @endauth
+        </div>
+
+        <!-- Daftar Ulasan -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse ($reviews as $review)
-                <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="bg-white p-6 rounded-xl shadow">
                     <div class="flex items-center mb-4">
-                        {{-- Gambar avatar default --}}
-                        <img src="{{ asset('pelanggan/default.png') }}" alt="{{ $review->user->name }}" class="w-12 h-12 rounded-full mr-4">
+                        <img src="{{ $review->user->avatar ? asset('storage/avatars/' . $review->user->avatar) : asset('images/default-avatar.png') }}"
+                             alt="Avatar {{ $review->user->name }}"
+                             class="w-12 h-12 rounded-full object-cover mr-4 border border-gray-300">
+
                         <div>
                             <h4 class="font-semibold text-gray-900">{{ $review->user->name }}</h4>
-                            <div class="text-yellow-500">★★★★☆</div> {{-- dummy rating --}}
+                            <p class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</p>
+                            <div class="text-yellow-500 text-sm">★★★★☆</div> {{-- dummy rating --}}
                         </div>
                     </div>
-                    <p class="text-gray-600 text-sm">"{{ $review->content }}"</p>
-                    <p class="text-xs text-gray-400 mt-2">{{ $review->created_at->diffForHumans() }}</p>
+
+                    <p class="text-gray-700 text-sm">"{{ $review->content }}"</p>
                 </div>
             @empty
-                <p class="text-center text-gray-500 col-span-4">Belum ada ulasan dari pelanggan.</p>
+                <p class="text-center text-gray-500 col-span-3">Belum ada ulasan dari pelanggan.</p>
             @endforelse
         </div>
     </div>
 </section>
+
 
 
 
@@ -368,7 +384,7 @@
 
 @push('scripts')
 <script>
-    // Product filtering
+     // Product filtering
     function filterProducts(category) {
         const products = document.querySelectorAll('.product-card');
         const buttons = document.querySelectorAll('.category-btn');
@@ -378,16 +394,23 @@
         event.target.classList.add('active');
 
         // Filter products
+        let visibleCount = 0;
         products.forEach(product => {
             if (category === 'all' || product.dataset.category === category) {
                 product.style.display = 'block';
                 product.style.animation = 'fadeIn 0.5s ease-in-out';
+                visibleCount++;
             } else {
                 product.style.display = 'none';
             }
         });
-    }
 
+        // Tampilkan atau sembunyikan pesan "tidak ada produk"
+        const message = document.getElementById('noProductsMessage');
+        if (message) {
+            message.style.display = (visibleCount === 0) ? 'block' : 'none';
+        }
+    }
     // Search functionality
     document.getElementById('searchInput').addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
@@ -418,7 +441,36 @@
             }
         });
     });
+     const stars = document.querySelectorAll('#ratingStars i');
+    const ratingInput = document.getElementById('ratingInput');
 
+    stars.forEach(star => {
+        star.addEventListener('mouseover', () => {
+            const val = parseInt(star.dataset.value);
+            highlightStars(val);
+        });
+
+        star.addEventListener('mouseout', () => {
+            highlightStars(parseInt(ratingInput.value));
+        });
+
+        star.addEventListener('click', () => {
+            ratingInput.value = star.dataset.value;
+            highlightStars(parseInt(star.dataset.value));
+        });
+    });
+
+    function highlightStars(rating) {
+        stars.forEach(star => {
+            star.classList.toggle('text-yellow-400', star.dataset.value <= rating);
+            star.classList.toggle('text-gray-300', star.dataset.value > rating);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        highlightStars(parseInt(ratingInput.value));
+    });
+    
     // Add fade-in animation keyframes
     const style = document.createElement('style');
     style.textContent = `

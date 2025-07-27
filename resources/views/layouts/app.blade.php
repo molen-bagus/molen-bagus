@@ -28,7 +28,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1YZyXehd3cLE9aGAvJ09uAOWSY3YBaEB9b1Fg4CTH+ec8IQkhOewCeJ4r5g+a3a0Y+mz/cTymYbL8B0IuWmE1g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -93,54 +93,51 @@
                 <!-- Desktop Navigation -->
 <nav class="hidden lg:flex items-center space-x-8">
     <a href="{{ route('home') }}" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-        Beranda
-    </a>
-    <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-        <i class="fa-solid fa-user-circle mr-1"></i> Profil Saya
-    </a>
+        Beranda</a>
     <a href="#products" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Produk</a>
     <a href="#reviews" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Ulasan</a>
     <a href="#contact" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Kontak</a>
 
     @auth
-    <!-- User Menu -->
-    <div class="relative group">
-        <button class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">
-            <i class="fas fa-user-circle text-xl"></i>
-            <span>{{ Auth::user()->name }}</span>
-            <i class="fas fa-chevron-down text-sm"></i>
-        </button>
+<!-- User Menu -->
+<div class="relative group">
+    <button class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">
+        <img src="{{ Auth::user()->avatar ? asset('storage/avatars/' . Auth::user()->avatar) : asset('images/default-avatar.png') }}"
+             alt="Avatar"
+             class="w-8 h-8 rounded-full object-cover border border-gray-300">
+        <span>{{ Auth::user()->name }}</span>
+        <i class="fas fa-chevron-down text-sm"></i>
+    </button>
 
-        <!-- Dropdown Menu -->
-        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-            <div class="py-2">
-                <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-200">
-                    {{ Auth::user()->email }}
-                </div>
-
-                <!-- Profil Saya -->
-                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-user mr-2"></i>
-                    Profil Saya
-                </a>
-
-                @if(Auth::user()->isAdmin())
-                <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-cog mr-2"></i>
-                    Admin Panel
-                </a>
-                @endif
-
-                <form method="POST" action="{{ route('logout') }}" class="block">
-                    @csrf
-                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-sign-out-alt mr-2"></i>
-                        Logout
-                    </button>
-                </form>
+    <!-- Dropdown Menu -->
+    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+        <div class="py-2">
+            <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-200">
+                {{ Auth::user()->email }}
             </div>
+
+            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                <i class="fas fa-user mr-2"></i>
+                Profil Saya
+            </a>
+
+            @if(Auth::user()->isAdmin())
+            <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                <i class="fas fa-cog mr-2"></i>
+                Admin Panel
+            </a>
+            @endif
+
+            <form method="POST" action="{{ route('logout') }}" class="block">
+                @csrf
+                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                </button>
+            </form>
         </div>
     </div>
+</div>
 
     @else
     <!-- Profil Ikon - Langsung Arahkan ke Login -->
@@ -314,7 +311,7 @@
 
     <!-- Cart Modal -->
     <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
+        <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xl font-bold font-poppins">Keranjang Belanja</h3>
@@ -324,7 +321,7 @@
                 </div>
             </div>
             
-            <div class="p-6 max-h-96 overflow-y-auto">
+            <div class="px-6 py-4 overflow-y-auto max-h-60 flex-1">
                 <div id="cartItems">
                     <p class="text-gray-500 text-center py-8">Keranjang kosong</p>
                 </div>
@@ -539,17 +536,22 @@
 
             document.body.appendChild(toast);
 
-            setTimeout(() => {
-                toast.classList.remove('translate-x-full');
-            }, 100);
+            
+    // Trigger animasi masuk
+    requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', 'translate-y-2');
+    });
 
-            setTimeout(() => {
-                toast.classList.add('translate-x-full');
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
-            }, 3000);
-        }
+    // Trigger animasi keluar
+    setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+    }, 1000);
+
+    // Hapus setelah transisi
+    toast.addEventListener('transitionend', () => {
+        toast.remove();
+    });
+}
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {

@@ -1,15 +1,18 @@
+<?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
     public function edit()
     {
-        $user = Auth::user();
-        return view('profil', compact('user'));
+        $user = auth()->user();
+        return view('profile.edit', compact('user'));
     }
 
     public function update(Request $request)
@@ -17,23 +20,25 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'    => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
-            'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'avatar'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $user->name = $request->name;
         $user->address = $request->address;
 
         if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                Storage::delete('public/avatars/' . $user->avatar);
-            }
+            $file = $request->file('avatar');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
 
-            $avatar = $request->file('avatar');
-            $filename = uniqid() . '.' . $avatar->getClientOriginalExtension();
-            $avatar->storeAs('public/avatars', $filename);
+            // Simpan file ke storage/app/public/avatars
+            Storage::disk('public')->putFileAs('avatars', $file, $filename);
+
+            // Simpan nama file ke database
             $user->avatar = $filename;
+
+            Log::info('Avatar disimpan di storage/app/public/avatars/' . $filename);
         }
 
         $user->save();

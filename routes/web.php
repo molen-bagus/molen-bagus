@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProfileController;
 
+
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Product routes
@@ -15,11 +16,10 @@ Route::post('/review', [ReviewController::class, 'store'])->middleware('auth')->
 // ini untuk tampilan edit profil
 
 Route::middleware(['auth'])->group(function () {
-    // Rute edit profil (GET)
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Rute update profil (POST)
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
+
 // Authentication routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

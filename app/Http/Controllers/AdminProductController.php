@@ -28,8 +28,8 @@ class AdminProductController extends Controller
         }
 
         // Status filter
-        if ($request->has('status') && $request->status !== '') {
-            $query->where('is_active', $request->status);
+        if ($request->filled('status')) {
+        $query->where('is_active', (bool) $request->status);
         }
 
         $products = $query->orderBy('created_at', 'desc')->paginate(10);

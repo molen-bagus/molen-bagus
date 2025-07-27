@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model
 {
@@ -16,6 +16,11 @@ class Product extends Model
         'is_active'
     ];
 
+    public function scopeActive($query)
+{
+    return $query->where('is_active', 1);
+}
+   
     protected $casts = [
         'price' => 'decimal:2',
         'is_active' => 'boolean'
