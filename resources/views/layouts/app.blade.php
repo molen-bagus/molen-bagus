@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Molen Bagus - Jajanan Tradisional Terbaik')</title>
     
     <!-- SEO Meta Tags -->
@@ -77,11 +78,9 @@
     @stack('styles')
 </head>
 <body class="font-inter bg-gray-50 text-gray-900">
-    <!-- Header Navigation -->
     <header class="bg-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-20">
-                <!-- Logo -->
                 <div class="flex items-center space-x-3">
                     <img src="{{ asset('images/logo-bagus.jpg') }}" alt="Molen Bagus Logo" class="w-10 h-10 lg:w-12 lg:h-12 rounded-full">
                     <div>
@@ -90,136 +89,71 @@
                     </div>
                 </div>
                 
-                <!-- Desktop Navigation -->
-<nav class="hidden lg:flex items-center space-x-8">
-    <a href="{{ route('home') }}" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-        Beranda</a>
-    <a href="#products" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Produk</a>
-    <a href="#reviews" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Ulasan</a>
-    <a href="#contact" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Kontak</a>
-
-    @auth
-<!-- User Menu -->
-<div class="relative group">
-    <button class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">
-        <img src="{{ Auth::user()->avatar ? asset('storage/avatars/' . Auth::user()->avatar) : asset('images/default-avatar.png') }}"
-             alt="Avatar"
-             class="w-8 h-8 rounded-full object-cover border border-gray-300">
-        <span>{{ Auth::user()->name }}</span>
-        <i class="fas fa-chevron-down text-sm"></i>
-    </button>
-
-    <!-- Dropdown Menu -->
-    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-        <div class="py-2">
-            <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-200">
-                {{ Auth::user()->email }}
-            </div>
-
-            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                <i class="fas fa-user mr-2"></i>
-                Profil Saya
-            </a>
-
-            @if(Auth::user()->isAdmin())
-            <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                <i class="fas fa-cog mr-2"></i>
-                Admin Panel
-            </a>
-            @endif
-
-            <form method="POST" action="{{ route('logout') }}" class="block">
-                @csrf
-                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    Logout
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
-
-    @else
-    <!-- Profil Ikon - Langsung Arahkan ke Login -->
-    <a href="{{ route('login') }}" class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">
-        <i class="fas fa-user-circle text-xl"></i>
-        <span>Profil</span>
-    </a>
-
-    <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-        <i class="fas fa-sign-in-alt mr-1"></i>
-        Login
-    </a>
-    <a href="{{ route('register') }}" class="bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors">
-        <i class="fas fa-user-plus mr-1"></i>
-        Daftar
-    </a>
-    @endauth
-</nav>
-
-                
-                <!-- Cart & Mobile Menu -->
-                <div class="flex items-center space-x-4">
-                    <!-- Cart Button -->
-                    <button onclick="toggleCart()" class="relative p-2 text-gray-700 hover:text-primary-600 transition-colors">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                        <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
-                    </button>
-                    
-                    <!-- Mobile Menu Button -->
-                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-gray-700 hover:text-primary-600 transition-colors">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Mobile Navigation -->
-            <div id="mobileMenu" class="lg:hidden hidden border-t border-gray-200 py-4">
-                <nav class="flex flex-col space-y-3">
+                <nav class="hidden lg:flex items-center space-x-8">
                     <a href="{{ route('home') }}" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Beranda</a>
                     <a href="#products" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Produk</a>
                     <a href="#reviews" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Ulasan</a>
                     <a href="#contact" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Kontak</a>
 
                     @auth
-                        <div class="border-t border-gray-200 pt-3 mt-3">
-                            <div class="flex items-center space-x-2 text-gray-700 mb-3">
-                                <i class="fas fa-user-circle text-xl"></i>
-                                <span class="font-medium">{{ Auth::user()->name }}</span>
+                        <div class="relative group">
+                            <button class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                                <img src="{{ Auth::user()->avatar ? asset('storage/avatars/' . Auth::user()->avatar) : asset('images/default-avatar.png') }}"
+                                     alt="Avatar"
+                                     class="w-8 h-8 rounded-full object-cover border border-gray-300">
+                                <span>{{ Auth::user()->name }}</span>
+                                <i class="fas fa-chevron-down text-sm"></i>
+                            </button>
+
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-2">
+                                    <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-200">
+                                        {{ Auth::user()->email }}
+                                    </div>
+                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                        <i class="fas fa-user mr-2"></i> Profil Saya
+                                    </a>
+                                    @if(Auth::user()->isAdmin())
+                                    <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                        <i class="fas fa-cog mr-2"></i> Admin Panel
+                                    </a>
+                                    @endif
+                                    <form method="POST" action="{{ route('logout') }}" class="block">
+                                        @csrf
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                            <div class="text-sm text-gray-500 mb-3">{{ Auth::user()->email }}</div>
-                            @if(Auth::user()->isAdmin())
-                                <a href="{{ route('admin.products.index') }}" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors mb-3">
-                                    <i class="fas fa-cog mr-2"></i>
-                                    Admin Panel
-                                </a>
-                            @endif
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="w-full text-left text-gray-700 hover:text-primary-600 font-medium transition-colors">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>
-                                    Logout
-                                </button>
-                            </form>
                         </div>
                     @else
-                        <div class="border-t border-gray-200 pt-3 mt-3 space-y-3">
-                            <a href="{{ route('login') }}" class="block text-gray-700 hover:text-primary-600 font-medium transition-colors">
-                                <i class="fas fa-sign-in-alt mr-2"></i>
-                                Login
-                            </a>
-                            <a href="{{ route('register') }}" class="block bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors text-center">
-                                <i class="fas fa-user-plus mr-2"></i>
-                                Daftar
-                            </a>
-                        </div>
+                        <a href="{{ route('login') }}" class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span>Profil</span>
+                        </a>
+                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+                            <i class="fas fa-sign-in-alt mr-1"></i> Login
+                        </a>
+                        <a href="{{ route('register') }}" class="bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-user-plus mr-1"></i> Daftar
+                        </a>
                     @endauth
                 </nav>
+                
+                <div class="flex items-center space-x-2 lg:hidden">
+                    <button onclick="toggleCart()" class="relative p-2 text-gray-700 hover:text-primary-600 transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </button>
+                </div>
+                
+                {{-- MOBILE NAVIGATION DRAWER DIHAPUS DARI SINI --}}
+                {{-- Karena sudah ada bottom nav dan ikon profil di bottom nav --}}
             </div>
         </div>
     </header>
 
-    <!-- Flash Messages -->
     @if(session('success'))
         <div id="flashMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300">
             <div class="flex items-center">
@@ -238,78 +172,61 @@
         </div>
     @endif
 
-    <!-- Main Content -->
     <main>
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="container mx-auto px-4 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Company Info -->
-                <div class="lg:col-span-2">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <img src="{{ asset('images/logo-bagus.jpg') }}" alt="Molen Bagus Logo" class="w-12 h-12 rounded-full">
-                        <div>
-                            <h3 class="text-xl font-bold font-poppins">Molen Bagus</h3>
-                            <p class="text-gray-400">Jajanan Tradisional</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 mb-4 max-w-md">
-                        Jajanan tradisional yang dibuat dengan resep turun temurun, menghadirkan cita rasa autentik dalam setiap gigitan. Kualitas terbaik dengan harga terjangkau.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="https://www.instagram.com/molen_bagus" target="_blank" class="text-gray-400 hover:text-pink-500 transition-colors">
-                            <i class="fab fa-instagram text-2xl"></i>
-                        </a>
-                        <a href="https://wa.me/6281322818164" target="_blank" class="text-gray-400 hover:text-green-500 transition-colors">
-                            <i class="fab fa-whatsapp text-2xl"></i>
-                        </a>
-                        <a href="https://www.google.com/maps/place/Molen+Bagus" target="_blank" class="text-gray-400 hover:text-blue-500 transition-colors">
-                            <i class="fas fa-map-marker-alt text-2xl"></i>
-                        </a>
+<footer class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"> 
+            <div class="lg:col-span-2">
+                <div class="flex items-center space-x-3 mb-4">
+                    <img src="{{ asset('images/logo-bagus.jpg') }}" alt="Molen Bagus Logo" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full">
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-bold font-poppins">Molen Bagus</h3>
+                        <p class="text-xs sm:text-sm text-gray-400">Jajanan Tradisional</p>
                     </div>
                 </div>
-                
-                <!-- Quick Links -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4 font-poppins">Menu Cepat</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-gray-300 hover:text-white transition-colors">Beranda</a></li>
-                        <li><a href="#products" class="text-gray-300 hover:text-white transition-colors">Produk</a></li>
-                        <li><a href="#reviews" class="text-gray-300 hover:text-white transition-colors">Ulasan</a></li>
-                        <li><a href="#contact" class="text-gray-300 hover:text-white transition-colors">Kontak</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Contact Info -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4 font-poppins">Kontak</h4>
-                    <ul class="space-y-3 text-gray-300">
-                        <li class="flex items-center space-x-2">
-                            <i class="fas fa-phone text-primary-400"></i>
-                            <span>+62 813-2281-8164</span>
-                        </li>
-                        <li class="flex items-center space-x-2">
-                            <i class="fas fa-envelope text-primary-400"></i>
-                            <span>molenbagus@email.com</span>
-                        </li>
-                        <li class="flex items-start space-x-2">
-                            <i class="fas fa-map-marker-alt text-primary-400 mt-1"></i>
-                            <span>Jl. Gegerkalong Girang, Bandung, Jawa Barat</span>
-                        </li>
-                    </ul>
+                <p class="text-sm sm:text-base text-gray-300 mb-4 max-w-md">
+                    Jajanan tradisional yang dibuat dengan resep turun temurun, menghadirkan cita rasa autentik dalam setiap gigitan. Kualitas terbaik dengan harga terjangkau.
+                </p>
+                <div class="flex space-x-3 sm:space-x-4">
+                    <a href="https://www.instagram.com/molen_bagus" target="_blank" class="text-xl sm:text-2xl text-gray-400 hover:text-pink-500 transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/6281322818164" target="_blank" class="text-xl sm:text-2xl text-gray-400 hover:text-green-500 transition-colors">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://www.google.com/maps/place/Molen+Bagus" target="_blank" class="text-xl sm:text-2xl text-gray-400 hover:text-blue-500 transition-colors">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </a>
                 </div>
             </div>
-            
-            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 Molen Bagus. All rights reserved.</p>
+
+            <div>
+                <h4 class="text-base sm:text-lg font-semibold mb-3 sm:mb-4 font-poppins">Kontak</h4>
+                <ul class="space-y-2 sm:space-y-3 text-gray-300">
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-phone text-base sm:text-lg text-primary-400"></i>
+                        <span class="text-sm sm:text-base">+62 813-2281-8164</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-envelope text-base sm:text-lg text-primary-400"></i>
+                        <span class="text-sm sm:text-base">molenbagus@email.com</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <i class="fas fa-map-marker-alt text-base sm:text-lg text-primary-400 mt-1"></i>
+                        <span class="text-sm sm:text-base">Jl. Gegerkalong Girang, Bandung, Jawa Barat</span>
+                    </li>
+                </ul>
             </div>
         </div>
-    </footer>
-
-    <!-- Cart Modal -->
+        
+        <div class="border-t border-gray-800 mt-6 pt-6 text-center text-gray-400 sm:mt-8 sm:pt-8">
+            <p class="text-xs sm:text-sm">© 2025 Molen Bagus. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
     <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
             <div class="p-6 border-b border-gray-200">
@@ -357,9 +274,108 @@
         </div>
     </div>
 
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg lg:hidden z-40">
+        <div class="flex justify-around items-center h-16">
+            <a href="{{ route('home') }}" class="flex flex-col items-center justify-center text-gray-700 hover:text-primary-600 transition-colors w-1/4">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs font-medium">Beranda</span>
+            </a>
+
+            <a href="#products" class="flex flex-col items-center justify-center text-gray-700 hover:text-primary-600 transition-colors w-1/4">
+                <i class="fas fa-box-open text-xl mb-1"></i>
+                <span class="text-xs font-medium">Produk</span>
+            </a>
+
+            <a href="#reviews" class="flex flex-col items-center justify-center text-gray-700 hover:text-primary-600 transition-colors w-1/4">
+                <i class="fas fa-star text-xl mb-1"></i>
+                <span class="text-xs font-medium">Ulasan</span>
+            </a>
+
+            <button onclick="toggleProfileBottomSheet()" class="flex flex-col items-center justify-center text-gray-700 hover:text-primary-600 transition-colors w-1/4">
+                @auth
+                    <img src="{{ Auth::user()->avatar ? asset('storage/avatars/' . Auth::user()->avatar) : asset('images/default-avatar.png') }}"
+                         alt="Avatar"
+                         class="w-8 h-8 rounded-full object-cover">
+                @else
+                    <i class="fas fa-user-circle text-xl"></i>
+                @endauth
+                <span class="text-xs font-medium">Profil</span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="profileBottomSheet" class="fixed inset-x-0 bottom-0 bg-white shadow-xl rounded-t-2xl lg:hidden z-50 transform translate-y-full transition-transform duration-300 hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold font-poppins">Akun Saya</h3>
+                <button onclick="toggleProfileBottomSheet()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            @auth
+                <div class="py-2 border-t border-gray-200 mt-4">
+                    <div class="px-4 py-2 text-sm text-gray-500 border-b border-gray-200 mb-2">
+                        <div class="flex items-center space-x-2">
+                            <img src="{{ Auth::user()->avatar ? asset('storage/avatars/' . Auth::user()->avatar) : asset('images/default-avatar.png') }}"
+                                 alt="Avatar"
+                                 class="w-8 h-8 rounded-full object-cover border border-gray-300">
+                            <span class="font-medium text-gray-900">{{ Auth::user()->name }}</span>
+                        </div>
+                        <p class="mt-1">{{ Auth::user()->email }}</p>
+                    </div>
+
+                    <a href="{{ route('profile.edit') }}" class="block px-4 py-3 text-base text-gray-700 hover:bg-gray-100 transition-colors rounded-lg">
+                        <i class="fas fa-user mr-3"></i> Profil Saya
+                    </a>
+
+                    @if(Auth::user()->isAdmin())
+                    <a href="{{ route('admin.products.index') }}" class="block px-4 py-3 text-base text-gray-700 hover:bg-gray-100 transition-colors rounded-lg">
+                        <i class="fas fa-cog mr-3"></i> Admin Panel
+                    </a>
+                    @endif
+
+                    <form method="POST" action="{{ route('logout') }}" class="block">
+                        @csrf
+                        <button type="submit" class="w-full text-left px-4 py-3 text-base text-gray-700 hover:bg-gray-100 transition-colors rounded-lg">
+                            <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            @else
+                <div class="py-4 text-center">
+                    <p class="text-gray-600 mb-4">Anda belum login.</p>
+                    <a href="{{ route('login') }}" class="w-full bg-primary-600 text-white py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors block mb-2">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Login
+                    </a>
+                    <a href="{{ route('register') }}" class="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors block">
+                        <i class="fas fa-user-plus mr-2"></i> Daftar
+                    </a>
+                </div>
+            @endauth
+        </div>
+    </div>
+
+
     @stack('scripts')
     
     <script>
+        // Fungsi untuk toggle Cart Modal (tidak berubah)
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+            updateCartDisplay();
+        }
+
+        // Fungsi baru untuk toggle Profile Bottom Sheet
+        function toggleProfileBottomSheet() {
+            const sheet = document.getElementById('profileBottomSheet');
+            sheet.classList.toggle('translate-y-full'); // Menggeser keluar/masuk
+            sheet.classList.toggle('hidden'); // Menampilkan/menyembunyikan
+        }
+
+
         // Global variables
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let selectedPayment = '';
@@ -571,7 +587,22 @@
                     }, 300);
                 }, 4000);
             }
+
+            // Scroll bottom navigation 
+            // Tambahkan fungsi untuk menangani smooth scroll dari bottom nav jika perlu
+        document.querySelectorAll('.fixed.bottom-0 a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
+    });
     </script>
 </body>
 </html>

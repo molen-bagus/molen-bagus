@@ -1,11 +1,67 @@
-@import 'tailwindcss';
+@import 'tailwindcss'; /* Ini akan mengimpor semua yang dibutuhkan dari Tailwind v4 */
 
+/* Jika ada kebutuhan spesifik untuk preflight saja: */
+/* @import "tailwindcss/preflight"; */
+
+/* Jika Anda memiliki custom components atau utilities yang ingin didefinisikan secara eksplisit, 
+   Anda bisa menambahkannya di sini. Namun, @import 'tailwindcss'; 
+   seharusnya sudah mencakup semuanya untuk kebanyakan kasus. */
+
+/* === Kode CSS Kustom Anda (dari @push('styles') di home.blade.php) === */
+
+.category-btn {
+    @apply bg-white text-gray-700 border border-gray-300;
+}
+
+.category-btn.active {
+    @apply bg-primary-600 text-white border-primary-600;
+}
+
+.category-btn:hover {
+    @apply bg-primary-50 text-primary-700 border-primary-300;
+}
+
+.category-btn.active:hover {
+    @apply bg-primary-700 text-white border-primary-700;
+}
+
+/* Custom no-scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Keyframes for fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+    /* Default padding-bottom untuk mobile */
+    padding-bottom: 4rem; /* H-16 (64px) = 4rem. Sesuaikan jika tinggi navbar berubah */
+}
+
+/* Media Query untuk desktop: hilangkan padding-bottom */
+@media (min-width: 1024px) { /* Ini adalah breakpoint 'lg' di Tailwind */
+    body {
+        padding-bottom: 0;
+    }
+}
+/* === End Kode CSS Kustom Anda === */
+
+/* @source directives Anda tetap di bawah jika masih relevan */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* Tema kustom Anda */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
