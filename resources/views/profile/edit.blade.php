@@ -10,8 +10,7 @@
 
     @if ($user->avatar)
     <div class="mb-4">
-        <img src="{{ asset('storage/avatars/' . $user->avatar) }}" 
-             alt="Foto Profil" 
+        <img src=<img src="{{ url('molen-bagus/storage/profile_images/' . $user->photo) }}" alt="Foto Profil">
              class="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover"> </div>
     @endif
 
