@@ -7,31 +7,21 @@
 @section('content')
 <div class="max-w-4xl mx-auto">
     <div class="bg-white rounded-lg shadow">
-        <!-- Header -->
-        <div class="px-6 py-4 border-b border-gray-200">
-            <div class="flex items-center justify-between">
+        <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200"> <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="text-lg font-medium text-gray-900">Form Edit Produk</h3>
-                    <p class="mt-1 text-sm text-gray-600">Edit informasi produk: {{ $product->name }}</p>
+                    <h3 class="text-base sm:text-lg font-medium text-gray-900">Form Edit Produk</h3> <p class="mt-1 text-sm text-gray-600">Edit informasi produk: {{ $product->name }}</p>
                 </div>
                 <a href="{{ route('admin.products.index') }}" 
-                   class="inline-flex items-center px-4 py-2 bg-gray-500 text-white text-sm font-medium rounded-lg hover:bg-gray-600 transition-colors">
-                    <i class="fas fa-arrow-left mr-2"></i>
+                   class="inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 bg-gray-500 text-white text-sm font-medium rounded-lg hover:bg-gray-600 transition-colors"> <i class="fas fa-arrow-left mr-2"></i>
                     Kembali
                 </a>
             </div>
         </div>
 
-        <!-- Form -->
-        <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="p-6">
-            @csrf
+        <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="p-4 sm:p-6"> @csrf
             @method('PUT')
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Left Column -->
-                <div class="space-y-6">
-                    <!-- Product Name -->
-                    <div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6"> <div class="space-y-4 sm:space-y-6"> <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                             Nama Produk <span class="text-red-500">*</span>
                         </label>
@@ -40,54 +30,47 @@
                                id="name"
                                value="{{ old('name', $product->name) }}"
                                required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-500 @enderror"
-                               placeholder="Masukkan nama produk">
-                        @error('name')
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-500 @enderror text-sm"
+                               placeholder="Masukkan nama produk"> @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Price -->
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
                             Harga <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3 top-2 text-gray-500">Rp</span>
-                            <input type="number" 
+                            <span class="absolute left-3 top-2.5 text-gray-500 text-sm">Rp</span> <input type="number" 
                                    name="price" 
                                    id="price"
                                    value="{{ old('price', $product->price) }}"
                                    required
                                    min="0"
                                    step="0.01"
-                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('price') border-red-500 @enderror"
-                                   placeholder="0">
-                        </div>
+                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('price') border-red-500 @enderror text-sm"
+                                   placeholder="0"> </div>
                         @error('price')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Category -->
                     <div>
                         <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                             Kategori <span class="text-red-500">*</span>
                         </label>
-                        <select name="category" id="category" required class="...">
-                <option value="">Pilih Kategori</option>
-                 @foreach($categories as $category)
-                    <option value="{{ $category }}" {{ old('category') == $category ? 'selected' : '' }}>
-                     {{ ucfirst($category) }}
-                    </option>
-                 @endforeach
-                </select>
+                        <select name="category" id="category" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 text-sm @error('category') border-red-500 @enderror"> <option value="">Pilih Kategori</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category }}" {{ old('category', $product->category) == $category ? 'selected' : '' }}>
+                                    {{ ucfirst($category) }}
+                                </option>
+                            @endforeach
+                        </select>
                         @error('category')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Status -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                         <div class="flex items-center">
@@ -104,31 +87,25 @@
                     </div>
                 </div>
 
-                <!-- Right Column -->
-                <div class="space-y-6">
-                    <!-- Current Image -->
-                    <div>
+                <div class="space-y-4 sm:space-y-6"> <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Saat Ini</label>
                         <div class="mb-4">
                             <img src="{{ asset($product->image) }}" 
                                  alt="{{ $product->name }}" 
-                                 class="h-32 w-32 object-cover rounded-lg border border-gray-300">
+                                 class="h-24 w-24 sm:h-32 sm:w-32 object-cover rounded-lg border border-gray-300">
                         </div>
                     </div>
 
-                    <!-- Product Image -->
                     <div>
                         <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
                             Ganti Gambar Produk
                         </label>
-                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-primary-400 transition-colors">
+                        <div class="mt-1 flex justify-center px-4 pt-4 pb-4 sm:px-6 sm:pt-5 sm:pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-primary-400 transition-colors">
                             <div class="space-y-1 text-center">
                                 <div id="imagePreview" class="hidden">
-                                    <img id="previewImg" src="" alt="Preview" class="mx-auto h-32 w-32 object-cover rounded-lg">
-                                </div>
+                                    <img id="previewImg" src="" alt="Preview" class="mx-auto h-24 w-24 sm:h-32 sm:w-32 object-cover rounded-lg"> </div>
                                 <div id="uploadPlaceholder">
-                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400"></i>
-                                    <div class="flex text-sm text-gray-600">
+                                    <i class="fas fa-cloud-upload-alt text-3xl sm:text-4xl text-gray-400"></i> <div class="flex text-sm text-gray-600">
                                         <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-primary-600 hover:text-primary-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500">
                                             <span>Upload gambar baru</span>
                                             <input id="image" 
@@ -150,7 +127,6 @@
                         @enderror
                     </div>
 
-                    <!-- Description -->
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                             Deskripsi Produk
@@ -158,25 +134,19 @@
                         <textarea name="description" 
                                   id="description"
                                   rows="6"
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('description') border-red-500 @enderror"
-                                  placeholder="Masukkan deskripsi produk...">{{ old('description', $product->description) }}</textarea>
-                        @error('description')
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('description') border-red-500 @enderror text-sm"
+                                  placeholder="Masukkan deskripsi produk...">{{ old('description', $product->description) }}</textarea> @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
-            <!-- Form Actions -->
-            <div class="mt-8 pt-6 border-t border-gray-200">
-                <div class="flex items-center justify-end space-x-4">
-                    <a href="{{ route('admin.products.index') }}" 
-                       class="px-6 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                        Batal
+            <div class="mt-6 pt-4 sm:mt-8 sm:pt-6 border-t border-gray-200"> <div class="flex items-center justify-end space-x-3 sm:space-x-4"> <a href="{{ route('admin.products.index') }}" 
+                       class="px-5 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"> Batal
                     </a>
                     <button type="submit" 
-                            class="px-6 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
-                        <i class="fas fa-save mr-2"></i>
+                            class="px-5 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"> <i class="fas fa-save mr-2"></i>
                         Update Produk
                     </button>
                 </div>
@@ -197,8 +167,22 @@
                 document.getElementById('uploadPlaceholder').classList.add('hidden');
             }
             reader.readAsDataURL(file);
+        } else { // Jika input dikosongkan (file dihapus)
+            document.getElementById('previewImg').src = "";
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('uploadPlaceholder').classList.remove('hidden');
         }
     }
+
+    // Initialize preview if an image already exists (for edit page)
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentImageSrc = "{{ asset($product->image) }}";
+        if (currentImageSrc && currentImageSrc !== "{{ asset('') }}") { // Check if a real image path exists
+            document.getElementById('previewImg').src = currentImageSrc;
+            document.getElementById('imagePreview').classList.remove('hidden');
+            document.getElementById('uploadPlaceholder').classList.add('hidden');
+        }
+    });
 </script>
 @endpush
 @endsection
